@@ -19,7 +19,7 @@ profileRouter.get("/profile/view" , userauth ,  async (req ,res) => {
 profileRouter.patch("/profile/edit" , userauth , async (req  ,res) => {
   try{
    if(!validateProfileEditData(req)) {
-    throw new Error("Invalid Changes..") ;
+    throw new Error("Invalid Changes.." + req.user) ;
    }
     
 
@@ -36,7 +36,7 @@ profileRouter.patch("/profile/edit" , userauth , async (req  ,res) => {
     }) ;
   } 
   catch(err){
-     res.status(401).send("Error " +err.message) ;
+     res.status(401).send("Error " + err.message) ;
   }
 }) ;
 

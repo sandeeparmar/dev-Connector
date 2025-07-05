@@ -52,12 +52,10 @@ const userSchema = mongoose.Schema({
      type : String ,
      trim : true  ,
      required : true ,
-     index : true ,
    },
    gender:{
     type : String ,
     lowercase : true ,
-    index : true  ,
     validator(value){
       if(!["male" , "female" , "other"].includes(value)){
         throw new Error("Gender Data is Not valid") ;
@@ -66,7 +64,6 @@ const userSchema = mongoose.Schema({
    },
    phone:{
     type : String ,
-    index  :true ,
     trim : true ,
     uppercase : true ,
     maxLength : 10 , 
@@ -75,20 +72,33 @@ const userSchema = mongoose.Schema({
    },
    about:{
     type : String ,
-    index : true ,
     default : "I am Software developer" ,
     maxLength : 100 ,
    } ,
    photoUrl : {
     type : String ,
-    index : true ,  
-    default : "https://media.licdn.com/dms/image/v2/D5603AQHIfL47sJeHmQ/profile-displayphoto-shrink_800_800/B56Za.fkayHUAc-/0/1746952671643?e=1756944000&v=beta&t=2Aohsxr-7zg9o4k4rS59GOwyxesE_dwXTspz5t_R2mY",
+    default : "https://static.vecteezy.com/system/resources/previews/005/544/718/original/profile-icon-design-free-vector.jpg",
     maxLength : 100000 ,
    } ,
    skills : {
      type : Array ,
      default :["JavaScript" , "C++" , "C"  , "Mern Stack"] ,
+   },
+   Company : {
+    type : String,
+    default : "Student" ,
+    required : true ,
+  } ,
+   Batch : {  
+    type : Number ,
+    default : 2025 ,
+    required : true ,
+   } ,
+   Address : {
+     type : String ,
+     default : "India" ,
    }
+
 } ,{
   timestamps : true ,
 });
