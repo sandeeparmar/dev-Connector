@@ -15,8 +15,11 @@ authRouter.post("/signup" , async (req ,res)=>{
     const user = new User({
        firstName , lastName , emailID , password : passwordHash, gender , Batch , Company , about , Address , photoUrl , phone
     }) ;  
-    await user.save() ; // return a promise
-    res.send("registration is completed\n") ;
+    const savedUser = await user.save() ; // return a promise
+    const token = await savedUser.userToken() ;
+    res.cookie("token" , token ,{ expires: new Date(Date.now() + 900000)});
+
+    res.json({message : "registration is completed\n" , data : savedUser}) ;
   }
   catch(err){
     res.status(401).send("Something Wrong" + err.message) ;

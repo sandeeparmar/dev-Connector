@@ -18,7 +18,6 @@ const validateProfileEditData = (req) => {
    const updatedFields = ["firstName" , "lastName" , "photoUrl" , "skills" , "about" , "phone" , "gender" , "password", "age" , "Address" , "Batch"  , "Company"]  ;
    const isEditValid = Object.keys(req.body).every
       ((field) => updatedFields.includes(field)) ;
-   console.log(isEditValid) ; 
    return isEditValid ;
 } ;
 
