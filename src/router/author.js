@@ -10,13 +10,13 @@ const User = require('../models/user') ;
 authRouter.post("/signup" , async (req ,res)=>{
   try{
     validateSignupData(req) ; 
-    const {firstName , lastName , emailID , password , gender , Batch , Company , about , Address , photoUrl , phone } = req.body ;
+    const {firstName , lastName , emailID , password , gender , Batch , Company , about , Address , photoUrl , phone , age } = req.body ;
     const passwordHash  =  await bcrypt.hash(password , 10) ;
     const user = new User({
-       firstName , lastName , emailID , password : passwordHash, gender , Batch , Company , about , Address , photoUrl , phone
+       firstName , lastName , emailID , password : passwordHash, gender , Batch , Company , about , Address , photoUrl , phone ,age
     }) ;  
     const savedUser = await user.save() ; // return a promise
-    const token = await savedUser.userToken() ;
+    const token = await savedUser.userToken() ;//creating a toke n
     res.cookie("token" , token ,{ expires: new Date(Date.now() + 900000)});
 
     res.json({message : "registration is completed\n" , data : savedUser}) ;

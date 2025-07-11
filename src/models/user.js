@@ -22,7 +22,6 @@ const userSchema = mongoose.Schema({
     trim : true ,
     minLength : 3 ,
     maxLength :14 ,
-    uppercase : true,
     validate: {
        validator(value) {
         return validator.isAlpha(value, 'en-US', { ignore: ' ' });
@@ -67,7 +66,7 @@ const userSchema = mongoose.Schema({
     trim : true ,
     uppercase : true ,
     maxLength : 10 , 
-    minLength :10 ,
+    minLength :10,
      match: [/^[6-9]\d{9}$/, 'Invalid Indian mobile number']
    },
    about:{
