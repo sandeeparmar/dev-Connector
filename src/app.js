@@ -17,13 +17,13 @@ const authRouter = require('./router/author.js') ;
 const profileRouter  = require('./router/profile.js') ;
 const requestRouter = require('./router/request.js') ;
 const userRouter = require("./router/user.js") ;
-
+const paymentRouter = require('./router/payment.js') ; 
 
 app.use("/" , authRouter) ;
 app.use("/" , profileRouter) ;
 app.use("/" , requestRouter) ;
 app.use("/" , userRouter) ;
-
+app.use("/" , paymentRouter) ; 
 
 connectDB()
    .then(() => {
@@ -35,5 +35,4 @@ connectDB()
    })
    .catch((err) =>  {
       console.error("Database is not connected " , err.message);
-   }) ; 
-
+   }) ;

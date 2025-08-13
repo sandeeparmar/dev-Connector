@@ -13,7 +13,7 @@ const userauth = async (req ,res , next) => {
     if(!user){
       throw new Error("Invalid Attempts") ;
     }
-    req.user = user ;
+    req.user = user ; 
     next() ;
 
   }catch(err){
