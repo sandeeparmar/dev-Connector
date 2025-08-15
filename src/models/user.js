@@ -40,7 +40,6 @@ const userSchema = mongoose.Schema({
     required : true ,
     unique : true ,
     trim : true ,
-    // match: [/^\S+@\S+\.\S+$/, 'Invalid email format'],
     validate: {
         validator(value){
            return validator.isEmail(value)  ;
@@ -66,7 +65,7 @@ const userSchema = mongoose.Schema({
     type : String ,
     trim : true ,
     uppercase : true ,
-    maxLength : 10 , 
+    maxLength : 15 , 
     minLength :10,
      match: [/^[6-9]\d{9}$/, 'Invalid Indian mobile number']
    },

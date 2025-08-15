@@ -3,7 +3,7 @@ const userauth = require('../middleware/auth');
 const requestRouter = express.Router() ; 
 const User = require("../models/user") ;
 const ConnectionRequest  = require("../models/ConnectionRequest.js") ;
-
+const sendEmail = require("./sendEmail") ;
 
 
 
@@ -47,6 +47,17 @@ requestRouter.post(
       });
 
       const data = await connectionRequest.save();
+
+      const {firstName} = await User.findById(fromUserId) ;
+
+      const {emailID} = toUser ;
+      
+      
+      try {
+      await sendEmail(emailID, "Friend Request",  `Hi ${firstName} Sends you Friend Request`);
+      } catch (emailError) {
+        console.error("Failed to send email:", emailError.message);
+      }
 
       res.json({
         message:

@@ -1,9 +1,37 @@
-const express = require('express') 
+const nodemailer = require('nodemailer');
 
-const sendEmail = express.Router() ;
+async function sendEmail(emailName, subject, text) {
+  try {
+    if (!emailName || !subject || !text) {
+      throw new Error("Missing email details");
+    }
+  
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      secure: true,
+      port: 465,
+      auth: {
+        user: process.env.SEND_EMAIL_USERNAME,
+        pass: process.env.SEND_EMAIL_PASSWORD
+      }
+    });
 
-sendEmail.get("/profile/mail" ,  (req, res) => { 
-   res.send("I am Sending Mail....") ;
-} );
+    const emailBody = (typeof text === "object" && text !== null)
+  ? Object.entries(text).map(([k, v]) => `${k}: ${v}`).join("\n")
+  : text;
 
-module.exports = sendEmail ;
+    
+    let info = await transporter.sendMail({
+      from: process.env.SEND_EMAIL_USERNAME,
+      to: emailName,
+      subject: subject,
+      text: emailBody
+    });
+
+    return info;
+  } catch (err) {
+    console.error("Email sending failed:", err.message);
+    throw err;
+  }
+}
+module.exports = sendEmail;

@@ -111,13 +111,5 @@ profileRouter.patch("/profile/reset/password", async(req, res) => {
   }
 });
 
-profileRouter.post("/profile/mail", async (req, res) => {
-  try{
-    
-  }
-  catch(err) {
-    res.error("Error" + err.message) ;
-  }
-});
 
 module.exports = profileRouter;
