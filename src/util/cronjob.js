@@ -1,30 +1,26 @@
 const cron = require("node-cron") ;
 const sendEmail = require("../router/sendEmail") ;
 const User = require("../models/user.js") ;
-const connectionRequestSchemaModel = require("../models/ConnectionRequest.js") ;
+const connectionRequestSchema = require("../models/ConnectionRequest.js") ;
 const {subDays , startOfDay , endOfDay } = require("date-fns") ;
 
-    // second minute 
-cron.schedule( "0 1 * * *" , async () => {
+    //  minute 
+cron.schedule( "47 19 * * *" , async () => {
   try{
-
-    console.log("all Inactive User .... ") ;
-
-    const yesterday = subDays(new Date() , 1) ;
-
+    const yesterday = subDays(new Date() , 0) ;
     const yesterdayStart = startOfDay(yesterday) ;
     const yesterdayEnd = endOfDay(yesterday) ;
 
-
-    const pendingRequests = await  connectionRequestSchemaModel.find({
-      status : "Interested" ,
+    const pendingRequests = await  connectionRequestSchema.find({
+      status : "interested" ,
       createdAt : {
         $gte : yesterdayStart,
         $lt : yesterdayEnd 
       }
     }).populate("fromUserId toUserId") ;
-
+    
     const listOfEmails = [...new Set(pendingRequests.map(req => req.toUserId.emailID))] ;
+    
 
     for(const email of listOfEmails) {
        await sendEmail(email , "Remaining" , "You Have some friend request is present.." ) ;
@@ -32,7 +28,7 @@ cron.schedule( "0 1 * * *" , async () => {
 
     const InactiveUser = await User.find({
       lastLogin : {
-           $lt : new Date(Date.now() - 30*24*60*60*1000) 
+           $lt : new Date(yesterday)  
       }
     }) ;
 
