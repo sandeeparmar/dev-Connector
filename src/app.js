@@ -1,9 +1,11 @@
 const express = require("express") ;
 const app = express() ; 
 const connectDB = require("./config/database") ;
-require("dotenv").config() ;
 const cookieParser = require('cookie-parser') ;
 const cors = require('cors') ;
+
+require("dotenv").config() ;
+require("./util/cronjob.js") ;
 
 app.use(cors({
   origin: "http://localhost:5173",

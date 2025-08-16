@@ -96,8 +96,16 @@ const userSchema = mongoose.Schema({
    Address : {
      type : String ,
      default : "India" ,
+   },
+   Date :{
+    type : Date ,
+    default : Date.now
+   },
+   lastLogin : {
+    type :Date ,
+    default : Date.now 
    }
-
+   
 } ,{
   timestamps : true ,
 });
