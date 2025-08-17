@@ -9,7 +9,7 @@ async function sendEmail(emailName, subject, text) {
     let transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       secure: true,
-      port: 465,
+      port: process.env.SEND_EMAIL_PORTNUMBER,
       auth: {
         user: process.env.SEND_EMAIL_USERNAME,
         pass: process.env.SEND_EMAIL_PASSWORD
