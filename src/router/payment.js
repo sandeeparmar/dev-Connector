@@ -1,89 +1,47 @@
-const express = require('express');
-const Razorpay = require('razorpay');
-const crypto = require('crypto');
-const router = express.Router();
+const express = require("express") ;
+const paymentRouter = express.Router() ;
+const userAuth = require("../middleware/auth") ;
+const razorpayInstane = require("../util/razorpay") ;
+const Payment = require("../models/payments") ;
+const { v4: uuidv4 } = require("uuid");
 
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+paymentRouter.post("/payment/create" , userAuth , async (req , res) => {
+  try{
+    const newReceipt =  uuidv4() ;
 
-router.post('/payment/order', async (req, res) => {
-    try {
-        const { amount } = req.body;
+    const options = {
 
-        if (!amount) {
-            return res.status(400).json({
-                success: false,
-                message: 'Amount is required'
-            });
-        }
+       amount : req.body.amount ,
+       currency : req.body.currency ,
 
-        const options = {
-            amount: amount * 100, 
-            currency: 'INR',
-            receipt: `receipt_${Date.now()}`
-        };
+       notes : {
+          firstName : req.user.firstName ,
+          lastName : req.user.lastName ,
+          phoneNum : req.user.phone ,
+          emailId : req.user.emailId  
+       } ,
+      receipt : "rcpt"  + newReceipt,  // using uuid 
+    };
 
-        const order = await razorpay.orders.create(options);
-        
-        res.json({
-            success: true,
-            order
-        });
+    const order = await razorpayInstane.orders.create(options) ; 
 
-    } catch (error) {
-        console.error('Order creation error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to create order'
-        });
-    }
-});
+    const payment = await Payment({
+       userId : req.user._id ,
+       orderId : order.id ,
+       status : order.status ,
+       amount : order.amount ,
+       currency : order.currency ,
+       receipt : order.receipt ,
+       notes :  order.notes 
+    }) ;
 
-router.post('/payment/verify', (req, res) => {
-    try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const savedPayment = await payment.save() ;
+    res.json({...savedPayment.toJSON() , keyId : process.env.RAZORPAY_KEY_ID}) ;
 
-        if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-            return res.status(400).json({
-                success: false,
-                message: 'Missing payment details'
-            });
-        }
+  } 
+  catch(err){ 
+    console.log (err) ;
+  }
+}) ;
 
-        const body = razorpay_order_id + "|" + razorpay_payment_id;
-        const expectedSignature = crypto
-            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-            .update(body.toString())
-            .digest('hex');
-
-        if (expectedSignature === razorpay_signature) {
-            
-            res.json({
-                success: true,
-                message: 'Payment verified successfully'
-            });
-        } else {
-            res.status(400).json({
-                success: false,
-                message: 'Payment verification failed'
-            });
-        }
-
-    } catch (error) {
-        console.error('Payment verification error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Verification failed'
-        });
-    }
-});
-
-router.get('/payment/key', (req, res) => {
-    res.json({
-        key: process.env.RAZORPAY_KEY_ID
-    });
-});
-
-module.exports = router;
+module.exports  = paymentRouter ;
