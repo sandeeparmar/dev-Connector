@@ -29,6 +29,9 @@ app.use("/" , requestRouter) ;
 app.use("/" , userRouter) ;
 app.use("/" , paymentRouter) ; 
 app.use("/" , sendEmailRouter) ;
+app.get('/', (req, res) => {
+  res.send('Hello World')
+})
 
 connectDB()
    .then(() => {
