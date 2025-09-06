@@ -17,7 +17,7 @@ const limiter = rateLimit({
 }) ;
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://dev-connector-front-igey.vercel.app/",
   credentials: true,
 }));
 
