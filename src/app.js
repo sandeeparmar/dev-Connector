@@ -17,13 +17,16 @@ const limiter = rateLimit({
 }) ;
 
 app.use(cors({
-  origin: "https://dev-connector-front-igey.vercel.app/",
+  origin: "https://dev-connector-front-igey.vercel.app",
   credentials: true,
 }));
 
 app.use(express.json()) ;
 app.use(cookieParser()) ;
 
+app.get("/test" , (req ,res) =>{
+  res.json({success :true  , message : "Backend is Working"})
+}) ;
 
 const authRouter = require('./router/author.js') ;
 const profileRouter  = require('./router/profile.js') ;
