@@ -2,7 +2,11 @@ const nodemailer = require('nodemailer');
 
 async function sendEmail(emailName, subject, text) {
   try {
-    if (!emailName || !subject || !text) {
+    if (!emailName || typeof emailName !== "string" || !emailName.trim()) {
+      throw new Error("Recipient email address is missing or invalid.");
+    }
+
+    if (!subject || !text) {
       throw new Error("Missing email details");
     }
   
