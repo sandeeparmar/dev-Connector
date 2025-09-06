@@ -3,9 +3,18 @@ const app = express() ;
 const connectDB = require("./config/database") ;
 const cookieParser = require('cookie-parser') ;
 const cors = require('cors') ;
-
+const helmet = require("helmet") ;
+const rateLimit = require("express-rate-limit") 
+ 
 require("dotenv").config() ;
 require("./util/cronjob.js") ;
+
+app.use(helmet()) ;
+const limiter = rateLimit({
+  windowMs : 15*60*1000 ,
+  max : 500 ,
+  message : "Too many requests from this IP , please try again later."
+}) ;
 
 app.use(cors({
   origin: "http://localhost:5173",
