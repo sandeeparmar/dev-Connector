@@ -19,7 +19,7 @@ cron.schedule( "47 19 * * *" , async () => {
       }
     }).populate("fromUserId toUserId") ;
     
-    const listOfEmails = [...new Set(pendingRequests.map(req => req.toUserId.emailID))] ;
+    const listOfEmails = [...new Set(pendingRequests.map(req => req.toUserId.emailID)) .filter(email => typeof email === "string" && email.trim()) ] ;
     
 
     for(const email of listOfEmails) {
@@ -35,7 +35,9 @@ cron.schedule( "47 19 * * *" , async () => {
     const msg = "Come back to dev Connector!" ;
 
     for(const user of InactiveUser){
-      await sendEmail(user.emailID , "Remainder" , msg) ;
+       if (typeof user.emailID === "string" && user.emailID.trim()) {
+          await sendEmail(user.emailID, "Remainder", msg);
+        }
     }
 
   } 
