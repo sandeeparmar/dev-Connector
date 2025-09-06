@@ -61,11 +61,17 @@ authRouter.post("/signup", async (req, res) => {
     const plainUser = user.toObject();
     const safeData = sensitiveData(plainUser) ;
 
-    try {
-      await sendEmail(emailID, "Registration",  safeData);
-    } catch (emailError) {
-      console.error("Failed to send email:", emailError.message);
+    if (typeof emailID === "string" && emailID.trim()) {
+      try {
+        await sendEmail(emailID, "Registration",  safeData);
+      } catch (emailError) {
+        console.error("Failed to send email:", emailError.message);
+      }
     }
+    else {
+        console.error("User does not have a valid email address.");
+    }
+
 
     const userResponse = savedUser.toObject();
     delete userResponse.password;

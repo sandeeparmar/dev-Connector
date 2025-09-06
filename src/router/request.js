@@ -53,11 +53,15 @@ requestRouter.post(
       const {emailID} = toUser ;
       
       
-      try {
-      await sendEmail(emailID, "Friend Request",  `Hi ${firstName} Sends you Friend Request`);
-      } catch (emailError) {
-        console.error("Failed to send email:", emailError.message);
-      }
+      if (typeof emailID === "string" && emailID.trim()) {
+          try {
+            await sendEmail(emailID, "Friend Request", `Hi ${firstName} Sends you Friend Request`);
+          } catch (emailError) {
+            console.error("Failed to send email:", emailError.message);
+          }
+      } else {
+          console.error("User does not have a valid email address.");
+       }
 
       res.json({
         message:
